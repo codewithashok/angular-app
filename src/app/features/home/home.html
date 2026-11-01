@@ -1,0 +1,21 @@
+<h1>Welcome</h1>
+<p>This app is a production-style Angular starter used to learn Angular concepts step by step.</p>
+
+<section class="card">
+  <h2>Infrastructure check</h2>
+  <p>Open the browser console as well to see the LoggerService output.</p>
+
+  <div class="actions">
+    <button type="button" (click)="loadPosts()">Load posts (success)</button>
+    <button type="button" (click)="triggerHttpError()">HTTP 404 (error interceptor)</button>
+    <button type="button" (click)="triggerRuntimeError()">Runtime error (global handler)</button>
+  </div>
+
+  @if (posts().length) {
+    <ul>
+      @for (post of posts(); track post.id) {
+        <li>{{ post.title }}</li>
+      }
+    </ul>
+  }
+</section>

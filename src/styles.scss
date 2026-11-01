@@ -1,1 +1,29 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global styles. Component-specific styles belong in each component's .scss file. */
+@use 'styles/tokens';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+button {
+  padding: 0.5rem 1rem;
+  font: inherit;
+  color: #fff;
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}

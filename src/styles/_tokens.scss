@@ -1,0 +1,14 @@
+// Design tokens as CSS custom properties, usable from any component stylesheet.
+:root {
+  --color-primary: #3f51b5;
+  --color-success: #2e7d32;
+  --color-danger: #c62828;
+  --color-warning: #ed6c02;
+  --color-text: #1f2937;
+  --color-text-muted: #6b7280;
+  --color-bg: #f6f7fb;
+  --color-surface: #ffffff;
+  --color-border: #e5e7eb;
+  --radius: 8px;
+  --font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
