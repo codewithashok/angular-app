@@ -1,59 +1,85 @@
-# AngularApp
+# Angular App
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.5.
+A production-style Angular 22 starter, built step by step to learn Angular concepts.
+Standalone components, zoneless change detection, signals, SCSS, Vitest.
 
-## Development server
+## Getting started
 
-To start a local development server, run:
-
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Requires Node.js 22+.
 
 ```bash
-ng generate component component-name
+npm install
+npm start          # dev server at http://localhost:4200
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Scripts
 
-```bash
-ng generate --help
+| Command                | What it does                                  |
+| ---------------------- | --------------------------------------------- |
+| `npm start`            | Dev server with live reload (development env) |
+| `npm run build`        | Production build into `dist/`                 |
+| `npm test`             | Unit tests (Vitest) in watch mode             |
+| `npm run test:ci`      | Unit tests once, for CI                       |
+| `npm run lint`         | ESLint for TypeScript and HTML templates      |
+| `npm run lint:fix`     | ESLint with auto-fix                          |
+| `npm run format`       | Format all files with Prettier                |
+| `npm run format:check` | Verify formatting without changing files (CI) |
+
+A **pre-commit hook** (Husky + lint-staged) runs ESLint and Prettier on staged files,
+so badly formatted or lint-failing code cannot be committed.
+
+## Folder structure
+
+```
+src/
+  environments/        Build-time config (API URL, flags). Swapped via angular.json fileReplacements.
+  styles/              Global SCSS partials (design tokens).
+  styles.scss          Global styles entry.
+  app/
+    app.config.ts      App-wide providers: router, HttpClient + interceptors, ErrorHandler.
+    app.routes.ts      Top-level routes (pages are lazy loaded).
+    app.ts             Root component: global loader, toasts, <router-outlet>.
+
+    core/              Singletons used once for the whole app. Never imported by shared/.
+      constants/       API endpoint paths, storage keys.
+      errors/          GlobalErrorHandler (uncaught runtime errors).
+      interceptors/    auth (Bearer token), loading (global loader), error (AppError + toast).
+      layout/          App shell components: MainLayout, ToastContainer, GlobalLoader.
+      models/          App-wide types: AppError, Toast, PagedResponse.
+      services/        ApiService (all HTTP), Logger, Storage, Notification, Loading.
+
+    shared/            Reusable, stateless building blocks: components, directives, pipes, utils.
+                       (Created when the first reusable piece is added.)
+
+    features/          One folder per page/feature. Each feature owns its components,
+                       services and models. Features never import from other features.
+      home/
+      not-found/
 ```
 
-## Building
+### Import rules
 
-To build the project run:
+- `features/*` may import from `core/` and `shared/`.
+- `shared/` may import from `core/models` only. It holds no app state.
+- `core/` never imports from `features/`.
+- Use path aliases instead of deep relative paths: `@core/...`, `@shared/...`, `@features/...`, `@env/...`.
 
-```bash
-ng build
+### Naming conventions (Angular 2025 style guide)
+
+| Kind        | File                      | Class / symbol    |
+| ----------- | ------------------------- | ----------------- |
+| Component   | `home.ts` + `.html/.scss` | `Home`            |
+| Service     | `api.service.ts`          | `ApiService`      |
+| Interceptor | `auth.interceptor.ts`     | `authInterceptor` |
+| Guard       | `auth.guard.ts`           | `authGuard`       |
+| Model       | `app-error.model.ts`      | `AppError`        |
+
+## How an HTTP request flows
+
+```
+Component -> ApiService -> authInterceptor -> loadingInterceptor -> errorInterceptor -> server
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- Components never inject `HttpClient` directly; they use `ApiService` (or a feature service built on it).
+- Errors arrive in components as a normalized `AppError`; a toast is already shown.
+- Opt out per request with `SKIP_LOADER` / `SKIP_ERROR_TOAST` HttpContext tokens.
