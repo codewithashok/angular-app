@@ -1,0 +1,7 @@
+{
+  // Temporarily hidden from the Explorer while learning; remove a line to show those files again.
+  "files.exclude": {
+    "**/*.scss": true,
+    "**/*.spec.ts": true
+  }
+}

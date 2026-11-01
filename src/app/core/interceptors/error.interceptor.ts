@@ -1,11 +1,10 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
-import { STORAGE_KEYS } from '@core/constants/storage-keys';
 import { AppError } from '@core/models/app-error.model';
+import { AuthService } from '@core/services/auth.service';
 import { LoggerService } from '@core/services/logger.service';
 import { NotificationService } from '@core/services/notification.service';
-import { StorageService } from '@core/services/storage.service';
 import { SKIP_ERROR_TOAST } from './http-context.tokens';
 
 /**
@@ -18,7 +17,7 @@ import { SKIP_ERROR_TOAST } from './http-context.tokens';
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const notify = inject(NotificationService);
   const logger = inject(LoggerService);
-  const storage = inject(StorageService);
+  const auth = inject(AuthService);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
@@ -32,7 +31,8 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       logger.error('HTTP error', appError);
 
       if (error.status === 401) {
-        storage.remove(STORAGE_KEYS.accessToken);
+        // Clears the shared user AND the token, so the header updates too.
+        auth.logout();
         // Redirect to /login is added in the Auth step.
       }
 

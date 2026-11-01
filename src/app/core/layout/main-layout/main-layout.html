@@ -2,7 +2,19 @@
   <a class="brand" routerLink="/">{{ appName }}</a>
   <nav>
     <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+    <a routerLink="/users" routerLinkActive="active">Users</a>
+    <a routerLink="/posts" routerLinkActive="active">Posts</a>
   </nav>
+
+  <!-- Shared data: the logged-in user from AuthService -->
+  <div class="account">
+    @if (auth.user(); as user) {
+      <span>Hi, {{ user.username }}</span>
+      <button type="button" (click)="logout()">Logout</button>
+    } @else {
+      <a routerLink="/login" routerLinkActive="active">Login</a>
+    }
+  </div>
 </header>
 
 <main class="content">
