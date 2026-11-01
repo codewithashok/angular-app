@@ -1,3 +1,9 @@
+.close {
+  float: right;
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+}
+
 .address {
   margin-top: 1rem;
   padding: 1rem 1.25rem;

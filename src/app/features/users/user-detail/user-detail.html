@@ -1,6 +1,9 @@
 <!-- user() is the value received from the parent -->
 <!-- Pipe syntax: {{ value | pipeName }}  or with arguments: {{ value | pipeName: 'argument' }} -->
 
+<!-- CHILD -> PARENT: clicking calls close(), which emits the `closed` output -->
+<button type="button" class="close" (click)="close()">Close</button>
+
 <!-- uppercase pipe: "Leanne Graham" -> "LEANNE GRAHAM" -->
 <h2>{{ user().name | uppercase }}</h2>
 

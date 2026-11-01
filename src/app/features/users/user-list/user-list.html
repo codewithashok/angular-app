@@ -23,7 +23,8 @@
   <section class="details">
     @if (selectedUser(); as user) {
       <!-- PARENT -> CHILD: [user] passes the selected user into UserDetail's input -->
-      <app-user-detail [user]="user" />
+      <!-- CHILD -> PARENT: (closed) listens to UserDetail's output; $event is the emitted User -->
+      <app-user-detail [user]="user" (closed)="onDetailClosed($event)" />
     } @else {
       <p>Select a user to see their details.</p>
     }
