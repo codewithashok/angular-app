@@ -1,0 +1,31 @@
+<h1>Users</h1>
+<!-- Shared data: the same logged-in user the header shows -->
+<p>Logged in as: {{ auth.user()?.username ?? 'nobody' }}</p>
+
+<div class="layout">
+  <ul class="list">
+    @for (user of users(); track user.id) {
+      <li>
+        <button
+          type="button"
+          class="user"
+          [class.selected]="user.id === selectedUser()?.id"
+          (click)="selectedUser.set(user)"
+        >
+          {{ user.name }}
+        </button>
+      </li>
+    } @empty {
+      <li>Loading users…</li>
+    }
+  </ul>
+
+  <section class="details">
+    @if (selectedUser(); as user) {
+      <!-- PARENT -> CHILD: [user] passes the selected user into UserDetail's input -->
+      <app-user-detail [user]="user" />
+    } @else {
+      <p>Select a user to see their details.</p>
+    }
+  </section>
+</div>

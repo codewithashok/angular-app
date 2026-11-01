@@ -1,0 +1,38 @@
+<!-- user() is the value received from the parent -->
+<!-- Pipe syntax: {{ value | pipeName }}  or with arguments: {{ value | pipeName: 'argument' }} -->
+
+<!-- uppercase pipe: "Leanne Graham" -> "LEANNE GRAHAM" -->
+<h2>{{ user().name | uppercase }}</h2>
+
+<!-- custom pipe: "Leanne Graham" -> "LG" -->
+<p><strong>Initials:</strong> {{ user().name | initials }}</p>
+
+<!-- number pipe: 1 -> "001" ('3.0-0' = at least 3 digits, no decimals) -->
+<p><strong>User ID:</strong> #{{ user().id | number: '3.0-0' }}</p>
+
+<p><strong>Username:</strong> {{ user().username }}</p>
+<p><strong>Email:</strong> {{ user().email }}</p>
+<p><strong>Phone:</strong> {{ user().phone }}</p>
+<p><strong>Website:</strong> {{ user().website }}</p>
+<p><strong>Company:</strong> {{ user().company.name }}</p>
+
+<!-- date pipe: Date object -> "01/11/2026 08:58 PM" -->
+<p><strong>Opened at:</strong> {{ openedAt() | date: 'dd/MM/yyyy hh:mm a' }}</p>
+
+<div class="address">
+  <p class="label">Address</p>
+  <p class="city">{{ user().address.city }}</p>
+
+  <!-- addressToggle is the Toggle directive instance (see #addressToggle on the button below) -->
+  @if (addressToggle.isOpen()) {
+    <p class="more">
+      {{ user().address.street }}, {{ user().address.suite }}<br />
+      Zip: {{ user().address.zipcode }}
+    </p>
+  }
+
+  <!-- appToggle: the directive handles the click. #addressToggle="appToggle" exposes its state. -->
+  <button type="button" class="toggle" appToggle #addressToggle="appToggle">
+    {{ addressToggle.isOpen() ? 'Show less' : 'Show more' }}
+  </button>
+</div>

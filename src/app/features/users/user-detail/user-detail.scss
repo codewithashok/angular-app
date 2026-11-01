@@ -1,0 +1,36 @@
+.address {
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--color-bg);
+  border-left: 4px solid var(--color-primary);
+  border-radius: var(--radius);
+
+  .label {
+    margin: 0 0 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .city {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  .more {
+    margin: 0.5rem 0 0;
+    color: var(--color-text-muted);
+  }
+
+  // The button the appToggle directive is placed on: styled as a text link.
+  .toggle {
+    margin-top: 0.5rem;
+    padding: 0;
+    color: var(--color-primary);
+    background: none;
+    font-weight: 600;
+  }
+}
