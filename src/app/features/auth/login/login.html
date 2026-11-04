@@ -1,0 +1,86 @@
+<h1>Login</h1>
+
+@if (auth.user(); as user) {
+  <p>You are already logged in as {{ user.username }}.</p>
+} @else {
+  <!-- $event.preventDefault() stops the browser from reloading the page on submit -->
+  <form
+    class="login"
+    (submit)="$event.preventDefault(); login(username.value, password.value, role.value)"
+  >
+    <label>
+      Username
+      <input #username autocomplete="username" />
+    </label>
+    <label>
+      Password
+      <input #password type="password" autocomplete="current-password" />
+    </label>
+    <!-- Demo only: in a real app the backend decides the role, not the user. -->
+    <label>
+      Role
+      <select #role>
+        <option value="user">Normal user</option>
+        <option value="admin">Admin</option>
+      </select>
+    </label>
+    <button type="submit">Login</button>
+  </form>
+}
+
+<!--
+  ===========================================================================
+   NOTES: Forms in Angular
+  ===========================================================================
+
+  WHAT THIS PAGE USES: NO Angular forms feature at all.
+    It is a plain HTML form + TEMPLATE REFERENCE VARIABLES:
+      <input #username />          #username = a reference to this input element
+      login(username.value, ...)   we read the raw DOM value on submit
+
+    Good for: tiny forms, learning, quick demos.
+    Missing: validation rules, error messages, "touched"/"dirty" state,
+             disabling the button while invalid, typed form values.
+    Real apps use one of the 3 Angular approaches below.
+
+  ===========================================================================
+   THE 3 ANGULAR FORM APPROACHES
+  ===========================================================================
+
+  1. TEMPLATE-DRIVEN FORMS  (older, simple)
+     Import: FormsModule
+     The form is defined in the HTML; [(ngModel)] two-way binds inputs to properties.
+       <input name="username" [(ngModel)]="username" required minlength="3" />
+     + Little TypeScript; feels like plain HTML
+     - Validation lives in the HTML; harder to test and to build dynamic forms
+
+  2. REACTIVE FORMS  (most common in production today)
+     Import: ReactiveFormsModule
+     The form is defined in TypeScript; the HTML only connects to it.
+       TS:   form = new FormGroup({
+               username: new FormControl('', [Validators.required, Validators.minLength(3)]),
+               password: new FormControl('', Validators.required),
+             });
+       HTML: <form [formGroup]="form" (ngSubmit)="login()">
+               <input formControlName="username" />
+               <button [disabled]="form.invalid">Login</button>
+             </form>
+     + Typed values, validators in TS, easy to test, dynamic forms (FormArray)
+     - More code than template-driven
+
+  3. SIGNAL FORMS  (newest, built on signals)
+     The form model is a signal; fields and validation are signals too.
+     The direction Angular is moving; you will mostly see reactive forms in
+     existing projects for now.
+
+  ===========================================================================
+   QUICK COMPARISON
+  ===========================================================================
+                      Template refs   Template-driven   Reactive      Signal forms
+     Defined in       HTML            HTML              TypeScript    TypeScript
+     Validation       manual          HTML attributes   Validators    schema functions
+     Typed values     no              no                yes           yes
+     Used for         demos           simple forms      most apps     new apps
+
+  Next step: rebuild this page with REACTIVE FORMS + validation messages.
+-->

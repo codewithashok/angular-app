@@ -11,19 +11,7 @@ import { AuthService } from '@core/services/auth.service';
  */
 @Component({
   selector: 'app-post-list',
-  template: `
-    <h1>Posts</h1>
-    <!-- Shared data: the same logged-in user the header shows -->
-    <p>Logged in as: {{ auth.user()?.username ?? 'nobody' }}</p>
-
-    <ul>
-      @for (post of posts; track post.id) {
-        <li>{{ post.title }}</li>
-      } @empty {
-        <li>Loading posts…</li>
-      }
-    </ul>
-  `,
+  templateUrl: './post-list.html',
 })
 export class PostList implements OnInit, OnDestroy {
   // OLD: a plain property instead of a signal.

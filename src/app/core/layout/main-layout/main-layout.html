@@ -4,12 +4,17 @@
     <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
     <a routerLink="/users" routerLinkActive="active">Users</a>
     <a routerLink="/posts" routerLinkActive="active">Posts</a>
+    <!-- Authorization in the UI: only admins SEE the link.
+         Hiding a link is not security; roleGuard is what actually blocks /admin. -->
+    @if (auth.isAdmin()) {
+      <a routerLink="/admin" routerLinkActive="active">Admin</a>
+    }
   </nav>
 
   <!-- Shared data: the logged-in user from AuthService -->
   <div class="account">
     @if (auth.user(); as user) {
-      <span>Hi, {{ user.username }}</span>
+      <span>Hi, {{ user.username }} ({{ user.role }})</span>
       <button type="button" (click)="logout()">Logout</button>
     } @else {
       <a routerLink="/login" routerLinkActive="active">Login</a>

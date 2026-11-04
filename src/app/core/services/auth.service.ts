@@ -1,6 +1,6 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { STORAGE_KEYS } from '@core/constants/storage-keys';
-import { AuthUser } from '@core/models/auth-user.model';
+import { AuthUser, Role } from '@core/models/auth-user.model';
 import { StorageService } from './storage.service';
 
 /**
@@ -21,13 +21,21 @@ export class AuthService {
   // Read-only for everyone else; only login() and logout() can change it.
   readonly user = this._user.asReadonly();
   readonly isLoggedIn = computed(() => this._user() !== null);
+  readonly isAdmin = computed(() => this._user()?.role === 'admin');
+
+  /** Authorization check used by roleGuard and templates. */
+  hasRole(role: Role): boolean {
+    return this._user()?.role === role;
+  }
 
   /**
-   * Fake login: the demo API has no auth endpoint, so any username/password works.
-   * A real app would POST credentials to the backend and receive the user + token.
+   * Fake login: the demo API has no auth endpoint, so any username/password works,
+   * and the role is picked on the login form.
+   * A real app would POST credentials to the backend, and the BACKEND decides the role
+   * (usually inside the token). Never trust a role chosen in the browser.
    */
-  login(username: string): void {
-    const user: AuthUser = { username, loggedInAt: new Date().toISOString() };
+  login(username: string, role: Role): void {
+    const user: AuthUser = { username, role, loggedInAt: new Date().toISOString() };
 
     this._user.set(user);
     this.storage.set(STORAGE_KEYS.authUser, user);

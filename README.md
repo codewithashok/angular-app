@@ -43,18 +43,23 @@ src/
     core/              Singletons used once for the whole app. Never imported by shared/.
       constants/       API endpoint paths, storage keys.
       errors/          GlobalErrorHandler (uncaught runtime errors).
+      guards/          Route guards: authGuard (logged-in users only).
       interceptors/    auth (Bearer token), loading (global loader), error (AppError + toast).
       layout/          App shell components: MainLayout, ToastContainer, GlobalLoader.
-      models/          App-wide types: AppError, Toast, PagedResponse.
-      services/        ApiService (all HTTP), Logger, Storage, Notification, Loading.
+      models/          App-wide types: AppError, Toast, PagedResponse, AuthUser, User, Post.
+      services/        ApiService (all HTTP), AuthService, Logger, Storage, Notification, Loading.
 
-    shared/            Reusable, stateless building blocks: components, directives, pipes, utils.
-                       (Created when the first reusable piece is added.)
+    shared/            Reusable, stateless building blocks.
+      directives/      Toggle (show more / show less).
+      pipes/           InitialsPipe.
 
     features/          One folder per page/feature. Each feature owns its components,
                        services and models. Features never import from other features.
+      auth/login/
       home/
       not-found/
+      posts/post-list/
+      users/user-list/, users/user-detail/
 ```
 
 ### Import rules
@@ -71,8 +76,12 @@ src/
 | Component   | `home.ts` + `.html/.scss` | `Home`            |
 | Service     | `api.service.ts`          | `ApiService`      |
 | Interceptor | `auth.interceptor.ts`     | `authInterceptor` |
-| Guard       | `auth.guard.ts`           | `authGuard`       |
+| Guard       | `auth-guard.ts`           | `authGuard`       |
+| Pipe        | `initials-pipe.ts`        | `InitialsPipe`    |
+| Directive   | `toggle.ts`               | `Toggle`          |
 | Model       | `app-error.model.ts`      | `AppError`        |
+
+Guards, pipes and directives use the names `ng generate` produces.
 
 ## How an HTTP request flows
 

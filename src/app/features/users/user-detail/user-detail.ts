@@ -1,6 +1,7 @@
 import { DatePipe, DecimalPipe, UpperCasePipe } from '@angular/common';
-import { Component, computed, input, output } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { User } from '@core/models/user.model';
+import { AuthService } from '@core/services/auth.service';
 import { Toggle } from '@shared/directives/toggle';
 import { InitialsPipe } from '@shared/pipes/initials-pipe';
 
@@ -38,6 +39,9 @@ export class UserDetail {
     this.user();
     return new Date();
   });
+
+  // Used by the template to show the phone number to admins only.
+  protected readonly auth = inject(AuthService);
 }
 
 /*

@@ -15,7 +15,15 @@
 
 <p><strong>Username:</strong> {{ user().username }}</p>
 <p><strong>Email:</strong> {{ user().email }}</p>
-<p><strong>Phone:</strong> {{ user().phone }}</p>
+
+<!-- AUTHORIZATION in a template: admins see the phone number, normal users do not.
+     (A real backend should not even send hidden data to a normal user.) -->
+@if (auth.isAdmin()) {
+  <p><strong>Phone:</strong> {{ user().phone }} <em>(admin only)</em></p>
+} @else {
+  <p><strong>Phone:</strong> hidden, admins only</p>
+}
+
 <p><strong>Website:</strong> {{ user().website }}</p>
 <p><strong>Company:</strong> {{ user().company.name }}</p>
 

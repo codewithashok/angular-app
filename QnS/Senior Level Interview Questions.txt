@@ -1,0 +1,39 @@
+Angular Change Detection (Internal Working)
+
+* Zone.js and its role in Angular
+
+Ivy Renderer & Standalone Components
+
+* AOT vs JIT Compilation
+
+* Memory Leaks & Performance Optimization
+
+* OnPush Change Detection Strategy
+
+* Dynamic Components
+
+* ViewChild vs ContentChild
+
+* ng-content vs ng-template vs ng-contalner
+
+* Angular Security (XSS & CSRF)
+
+* HTTP Interceptors
+
+* State Management & NgRx
+
+* Data Sharing Between Components
+
+* Custom Validators
+
+Angular Universal (SSR)
+
+* Angular Signals
+
+Internationalization (i18n)
+
+Renderer2
+
+Testing Angular Apps & TestBed
+
+Migrating Angular Apps to New Vertions

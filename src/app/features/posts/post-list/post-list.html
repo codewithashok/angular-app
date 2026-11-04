@@ -1,0 +1,12 @@
+<h1>Posts</h1>
+<!-- Shared data: the same logged-in user the header shows -->
+<p>Logged in as: {{ auth.user()?.username ?? 'nobody' }}</p>
+
+<ul>
+  <!-- OLD style: `posts` is a plain array, so no () after it -->
+  @for (post of posts; track post.id) {
+    <li>{{ post.title }}</li>
+  } @empty {
+    <li>Loading posts…</li>
+  }
+</ul>
