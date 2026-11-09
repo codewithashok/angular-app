@@ -3,29 +3,55 @@
 @if (auth.user(); as user) {
   <p>You are already logged in as {{ user.username }}.</p>
 } @else {
-  <!-- $event.preventDefault() stops the browser from reloading the page on submit -->
-  <form
-    class="login"
-    (submit)="$event.preventDefault(); login(username.value, password.value, role.value)"
-  >
+  <!-- [formGroup] connects this <form> to `form` in login.ts.
+       (ngSubmit) also stops the browser from reloading the page. -->
+  <form class="login" [formGroup]="form" (ngSubmit)="login()">
+    <!-- @let = a template variable, so we don't repeat form.controls.username -->
+    @let username = form.controls.username;
     <label>
       Username
-      <input #username autocomplete="username" />
+      <!-- formControlName links this input to the `username` control -->
+      <input formControlName="username" autocomplete="username" />
     </label>
+    <!-- touched = the user has left the field; show errors only after that -->
+    @if (username.touched && username.hasError('required')) {
+      <small class="error">Username is required.</small>
+    }
+    @if (username.touched && username.hasError('minlength')) {
+      <small class="error">Username must be at least 3 characters.</small>
+    }
+
+    @let password = form.controls.password;
     <label>
       Password
-      <input #password type="password" autocomplete="current-password" />
+      <input formControlName="password" type="password" autocomplete="current-password" />
     </label>
+    @if (password.touched && password.hasError('required')) {
+      <small class="error">Password is required.</small>
+    }
+    @if (password.touched && password.hasError('minlength')) {
+      <small class="error">Password must be at least 6 characters.</small>
+    }
+
     <!-- Demo only: in a real app the backend decides the role, not the user. -->
     <label>
       Role
-      <select #role>
+      <select formControlName="role">
         <option value="user">Normal user</option>
         <option value="admin">Admin</option>
       </select>
     </label>
-    <button type="submit">Login</button>
+
+    <!-- Disabled until every validator passes -->
+    <button type="submit" [disabled]="form.invalid">Login</button>
   </form>
+
+  <!-- Learning aid: watch these change as you type -->
+  <div class="debug">
+    <p><strong>form.status:</strong> {{ form.status }}</p>
+    <p><strong>form.value:</strong> {{ form.value | json }}</p>
+    <p><strong>username.errors:</strong> {{ form.controls.username.errors | json }}</p>
+  </div>
 }
 
 <!--
@@ -33,15 +59,25 @@
    NOTES: Forms in Angular
   ===========================================================================
 
-  WHAT THIS PAGE USES: NO Angular forms feature at all.
-    It is a plain HTML form + TEMPLATE REFERENCE VARIABLES:
-      <input #username />          #username = a reference to this input element
-      login(username.value, ...)   we read the raw DOM value on submit
+  WHAT THIS PAGE USES: REACTIVE FORMS
+    TS:   form = this.fb.group({ username: ['', [Validators.required, ...]], ... })
+    HTML: <form [formGroup]="form" (ngSubmit)="login()">
+            <input formControlName="username" />
 
-    Good for: tiny forms, learning, quick demos.
-    Missing: validation rules, error messages, "touched"/"dirty" state,
-             disabling the button while invalid, typed form values.
-    Real apps use one of the 3 Angular approaches below.
+    Key pieces:
+      NonNullableFormBuilder   short way to build a typed FormGroup
+      Validators.required      built-in rules: required, minLength, maxLength,
+                               email, pattern, min, max
+      control.hasError('x')    is this rule failing right now?
+      control.touched          has the user left the field? (show errors after this)
+      control.dirty            has the user changed the value?
+      form.invalid / valid     overall status of all controls
+      form.getRawValue()       typed values of every control
+
+  BEFORE (template reference variables, no Angular forms feature):
+      <input #username />
+      (submit)="$event.preventDefault(); login(username.value, ...)"
+    Worked, but had no validation, no error messages, no touched state, no types.
 
   ===========================================================================
    THE 3 ANGULAR FORM APPROACHES
@@ -54,17 +90,9 @@
      + Little TypeScript; feels like plain HTML
      - Validation lives in the HTML; harder to test and to build dynamic forms
 
-  2. REACTIVE FORMS  (most common in production today)
+  2. REACTIVE FORMS  (most common in production today; THIS page)
      Import: ReactiveFormsModule
      The form is defined in TypeScript; the HTML only connects to it.
-       TS:   form = new FormGroup({
-               username: new FormControl('', [Validators.required, Validators.minLength(3)]),
-               password: new FormControl('', Validators.required),
-             });
-       HTML: <form [formGroup]="form" (ngSubmit)="login()">
-               <input formControlName="username" />
-               <button [disabled]="form.invalid">Login</button>
-             </form>
      + Typed values, validators in TS, easy to test, dynamic forms (FormArray)
      - More code than template-driven
 
@@ -81,6 +109,4 @@
      Validation       manual          HTML attributes   Validators    schema functions
      Typed values     no              no                yes           yes
      Used for         demos           simple forms      most apps     new apps
-
-  Next step: rebuild this page with REACTIVE FORMS + validation messages.
 -->

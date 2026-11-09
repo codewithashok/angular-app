@@ -10,3 +10,27 @@ label {
   flex-direction: column;
   gap: 0.25rem;
 }
+
+// Angular adds these classes to form controls automatically:
+// ng-valid / ng-invalid, ng-touched / ng-untouched, ng-dirty / ng-pristine
+input.ng-invalid.ng-touched {
+  border-color: var(--color-danger);
+}
+
+.error {
+  color: var(--color-danger);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.debug {
+  margin-top: 2rem;
+  padding: 0.75rem;
+  font-size: 0.85rem;
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius);
+}
