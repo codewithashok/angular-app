@@ -4,6 +4,7 @@ import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { Role } from '@core/models/auth-user.model';
 import { AuthService } from '@core/services/auth.service';
+import { noWhitespaceValidator } from '@shared/validators/no-whitespace.validator';
 
 /** Login page built with a REACTIVE FORM. On success the user is stored in AuthService. */
 @Component({
@@ -25,7 +26,8 @@ export class Login {
 
   // The form is defined HERE, in TypeScript: each field = [initial value, validators].
   protected readonly form = this.fb.group({
-    username: ['', [Validators.required, Validators.minLength(3)]],
+    // Built-in validators + our CUSTOM one (shared/validators/no-whitespace.validator.ts).
+    username: ['', [Validators.required, Validators.minLength(3), noWhitespaceValidator()]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     role: ['user' as Role],
   });

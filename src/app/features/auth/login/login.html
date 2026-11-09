@@ -20,6 +20,10 @@
     @if (username.touched && username.hasError('minlength')) {
       <small class="error">Username must be at least 3 characters.</small>
     }
+    <!-- 'whitespace' is the error key our custom validator returns -->
+    @if (username.touched && username.hasError('whitespace')) {
+      <small class="error">Username must not contain spaces.</small>
+    }
 
     @let password = form.controls.password;
     <label>
